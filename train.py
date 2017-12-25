@@ -24,7 +24,7 @@ train_dataset = datasets.CIFAR10(root='./data/',
 
 test_dataset = datasets.CIFAR10(root='./data/',
                               train=False, 
-                              transform=transforms.ToTensor())
+                              transform=transform)
 
 # Data Loader (Input Pipeline)
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
@@ -38,7 +38,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-model = ResidualAttentionModel()
+model = ResidualAttentionModel().cuda()
 print(model)
 
 lr = 0.001
@@ -48,9 +48,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 # Training 
 for epoch in range(100):
     for i, (images, labels) in enumerate(train_loader):
-        images = Variable(images)
+        images = Variable(images.cuda())
         # print(images.data)
-        labels = Variable(labels)
+        labels = Variable(labels.cuda())
         
         # Forward + Backward + Optimize
         optimizer.zero_grad()
@@ -78,15 +78,16 @@ class_correct = list(0. for i in range(10))
 class_total = list(0. for i in range(10))
 
 for images, labels in test_loader:
-    images = Variable(images)
+    images = Variable(images.cuda())
+    labels = Variable(labels.cuda())
     outputs = model(images)
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
-    correct += (predicted == labels).sum()
+    correct += (predicted == labels.data).sum()
     #
-    c = (predicted == labels).squeeze()
+    c = (predicted == labels.data).squeeze()
     for i in range(4):
-        label = labels[i]
+        label = labels.data[i]
         class_correct[label] += c[i]
         class_total[label] += 1
 
