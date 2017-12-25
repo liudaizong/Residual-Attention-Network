@@ -97,9 +97,9 @@ for images, labels in test_loader:
     #save image
     print('process batch %d' % num)
     image = image.view(image.size(0), 3, 224, 224)
-    # feature1 = feature1.view(feature1.size(0), 3, 28, 28)
-    # feature2 = feature2.view(feature2.size(0), 3, 28, 28)
-    # feature3 = feature3.view(feature3.size(0), 3, 28, 28)
+    feature1 = feature1[:,0:3,:,:]#.view(feature1.size(0), 3, 28, 28)
+    feature2 = feature2[:,0;3,:,:]#.view(feature2.size(0), 3, 28, 28)
+    feature3 = feature3[:,0:3,:,:]#.view(feature3.size(0), 3, 28, 28)
     if not os.path.exists('./output'):
       os.mkdir('./output')
     save_image(denorm(image.data), './output/image-%d.png' %(num+1))
